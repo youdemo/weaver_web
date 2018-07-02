@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -264,9 +265,16 @@ public class GetWCCImplAction {
 				 uploadBuffer = new String(Base64.encode(baos.toByteArray()));
 				}
 				docid = getDocId( docname,uploadBuffer,"1");
+				conn.close();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				try {
+					conn.close();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				log.writeLog("É¨Ãè»ú´´½¨Í¼Æ¬Ê§°Ü:name£º" + wco.getName());
 			}
 			if (!"".equals(docid)) {

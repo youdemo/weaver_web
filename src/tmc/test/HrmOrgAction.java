@@ -1,4 +1,4 @@
-package tmc.org;
+package tmc.test;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -608,26 +608,16 @@ public class HrmOrgAction {
 			mapStr.put("bankid1",hrb.getBankid1());
 			mapStr.put("accountid1",hrb.getAccountid1());
 			
-//			int s = 0;
-//			sql = "select max(id) as maxid from hrmresource";
-//			rs.executeSql(sql);
-//			if(rs.next()){
-//				s = rs.getInt("maxid");
-//			}
-//			if(s < 2) s = 2;
-//			else s = s+1;
-			int  currentid = 0;
-			int nextid=0;
-			// 处理系统最大需要问题
-			sql = "select indexdesc,currentid from SequenceIndex where indexdesc='resourceid'";
+			int s = 0;
+			sql = "select max(id) as maxid from hrmresource";
 			rs.executeSql(sql);
 			if(rs.next()){
-				currentid = rs.getInt("currentid");
+				s = rs.getInt("maxid");
 			}
-			nextid = currentid+1;
-			rs.executeSql("update SequenceIndex set currentid=" +nextid + " where indexdesc='resourceid'");
+			if(s < 2) s = 2;
+			else s = s+1;
 			
-			mapStr.put("id",String.valueOf(currentid));
+			mapStr.put("id",String.valueOf(s));
 			
 			boolean isRun = tdu.insert(mapStr,"hrmresource");
 			if(!isRun){
@@ -734,22 +724,22 @@ public class HrmOrgAction {
 		String managerstr = al. getAllManagerstr(""+id);
 		sql="update hrmresource set managerstr='"+managerstr+"' where id="+id;
 		rs.executeSql(sql);
-//		int  currentid = 0;
-//		int nextid=0;
-//		// 处理系统最大需要问题
-//		sql = "select indexdesc,currentid from SequenceIndex where indexdesc='resourceid'";
-//		rs.executeSql(sql);
-//		if(rs.next()){
-//			currentid = rs.getInt("currentid");
-//		}
-//		sql = "select max(id)+1 as nextid from hrmresource";
-//		rs.executeSql(sql);
-//		if(rs.next()){
-//			nextid = rs.getInt("nextid");
-//		}
-//		if(currentid != nextid){
-//			rs.executeSql("update SequenceIndex set currentid=" +nextid + " where indexdesc='resourceid'");
-//		}
+		int  currentid = 0;
+		int nextid=0;
+		// 处理系统最大需要问题
+		sql = "select indexdesc,currentid from SequenceIndex where indexdesc='resourceid'";
+		rs.executeSql(sql);
+		if(rs.next()){
+			currentid = rs.getInt("currentid");
+		}
+		sql = "select max(id)+1 as nextid from hrmresource";
+		rs.executeSql(sql);
+		if(rs.next()){
+			nextid = rs.getInt("nextid");
+		}
+		if(currentid != nextid){
+			rs.executeSql("update SequenceIndex set currentid=" +nextid + " where indexdesc='resourceid'");
+		}
 		
 		// 自定义信息处理
 		String tableName = "cus_fielddata";
